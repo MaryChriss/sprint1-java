@@ -30,23 +30,45 @@ public class MotoService {
     }
 
     public MotoDTO salvar(MotoDTO dto) {
-        Moto moto = new Moto(null, null, null);
+        Zona zona = null;
+        
+        if (dto.zonaId() != null) {
+            zona = zonaRepository.findById(dto.zonaId())
+                    .orElseThrow(() -> new IllegalArgumentException("Zona não encontrada"));
+        }
+        
+        Moto moto = new Moto();
         moto.setModelo(dto.modelo());
         moto.setPlaca(dto.placa());
-
-        if (dto.zonaId() != null) {
-            Zona zona = zonaRepository.findById(dto.zonaId())
-                    .orElseThrow(() -> new IllegalArgumentException("Zona não encontrada"));
-            moto.setZona(zona);
-        }
-
+        moto.setZona(zona);
+        
         return toDTO(repository.save(moto));
-    }
+    }    
 
     public void excluir(Long id) {
         repository.deleteById(id);
     }
 
+    public MotoDTO atualizar(Long id, MotoDTO dto) {
+        Moto moto = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Moto não encontrada"));
+    
+        // Atualiza os campos
+        moto.setModelo(dto.modelo());
+        moto.setPlaca(dto.placa());
+    
+        if (dto.zonaId() != null) {
+            Zona zona = zonaRepository.findById(dto.zonaId())
+                    .orElseThrow(() -> new IllegalArgumentException("Zona não encontrada"));
+            moto.setZona(zona);
+        } else {
+            moto.setZona(null);
+        }
+    
+        Moto motoAtualizada = repository.save(moto);
+        return toDTO(motoAtualizada);
+    }
+    
     private MotoDTO toDTO(Moto moto) {
         return new MotoDTO(
                 moto.getId(),

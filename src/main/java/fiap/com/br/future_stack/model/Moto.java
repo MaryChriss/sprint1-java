@@ -22,13 +22,13 @@ public class Moto {
 
     private StatusMoto status;
 
-    public Moto(String placa, String modelo, String status) {
-    this.placa = placa;
-    this.modelo = modelo;
-    this.status = StatusMoto.valueOf(status);
-}
+    public Moto() {}
 
-public Moto() {}
+    public Moto(String placa, String modelo, String status) {
+        this.placa = placa;
+        this.modelo = modelo;
+        this.status = StatusMoto.valueOf(status);
+    }
 
 
     public Long getId() {
