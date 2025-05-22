@@ -20,14 +20,11 @@ public class Moto {
     @ManyToOne(fetch = FetchType.LAZY)
     private Zona zona;
 
-    private String cor;
-
     private StatusMoto status;
 
-    public Moto(String placa, String modelo, String cor, String status) {
+    public Moto(String placa, String modelo, String status) {
     this.placa = placa;
     this.modelo = modelo;
-    this.cor = cor;
     this.status = StatusMoto.valueOf(status);
 }
 

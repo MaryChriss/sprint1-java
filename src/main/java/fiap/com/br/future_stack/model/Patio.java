@@ -21,7 +21,6 @@ public class Patio {
         this.localizacao = localizacao;
     }
 
-    // Getters e Setters
     public Long getId_patio() { return id_patio; }
     public void setId_patio(Long id_patio) { this.id_patio = id_patio; }
 

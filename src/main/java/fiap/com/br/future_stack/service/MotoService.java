@@ -30,7 +30,7 @@ public class MotoService {
     }
 
     public MotoDTO salvar(MotoDTO dto) {
-        Moto moto = new Moto(null, null, null, null);
+        Moto moto = new Moto(null, null, null);
         moto.setModelo(dto.modelo());
         moto.setPlaca(dto.placa());
 
