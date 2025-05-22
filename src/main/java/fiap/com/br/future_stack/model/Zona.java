@@ -3,7 +3,16 @@ package fiap.com.br.future_stack.model;
 import jakarta.persistence.*;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Zona {
 
     @Id
@@ -21,40 +30,8 @@ public class Zona {
     @Column(nullable = false, unique = true)
     private String nome;
 
-      public Zona() {
-    }
-    
-    public Long getId() {
-        return id;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patio_id", nullable = false)
+    private Patio patio;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public TipoZona getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(TipoZona tipo) {
-        this.tipo = tipo;
-    }
-
-    public Double getMetragem() {
-        return metragem;
-    }
-
-    public void setMetragem(Double metragem) {
-        this.metragem = metragem;
-    }
-
-    public List<Moto> getMotos() {
-        return motos;
-    }
-
-    public void setMotos(List<Moto> motos) {
-        this.motos = motos;
-    }
-
-    public Zona(String nome) { this.nome = nome; }
 }

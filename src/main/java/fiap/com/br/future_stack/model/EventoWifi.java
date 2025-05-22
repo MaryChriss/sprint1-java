@@ -2,7 +2,16 @@ package fiap.com.br.future_stack.model;
 
 import jakarta.persistence.*;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class EventoWifi {
 
     @Id
@@ -16,13 +25,5 @@ public class EventoWifi {
     private Gateway gateway;
 
     private Integer rssits_evento;
-
-    public EventoWifi() {}
-
-    public EventoWifi(Moto moto, Gateway gateway, int rssi) {
-        this.moto = moto;
-        this.gateway = gateway;
-        this.rssits_evento = rssi;
-    }
 
 }

@@ -3,7 +3,16 @@ package fiap.com.br.future_stack.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class EventoAlpr {
 
     @Id
@@ -20,14 +29,4 @@ public class EventoAlpr {
 
     private LocalDateTime ts_alpr;
 
-    public EventoAlpr() {}
-
-    public EventoAlpr(Moto moto, String placaLida, String urlImagem, LocalDateTime timestamp) {
-        this.moto = moto;
-        this.placa_lida = placaLida;
-        this.url_imagem = urlImagem;
-        this.ts_alpr = timestamp;
-    }
-
-    // Getters e Setters
 }

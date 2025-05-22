@@ -2,7 +2,16 @@ package fiap.com.br.future_stack.model;
 
 import jakarta.persistence.*;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Gateway {
 
     @Id
@@ -16,13 +25,5 @@ public class Gateway {
 
     @ManyToOne
     private Zona localid_zona;
-
-    public Gateway() {}
-
-    public Gateway(String mac_address, String descricao, Zona zona) {
-        this.mac_address = mac_address;
-        this.descricao = descricao;
-        this.localid_zona = zona;
-    }
 
 }
