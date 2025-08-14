@@ -51,15 +51,15 @@ public class MotoController {
 
         Page<Moto> page;
 
-        if (modelo != null && !modelo.isEmpty()) {
-            page = motoRepository.findByModeloContainingIgnoreCase(modelo, pageable);
-        } else if (placa != null && !placa.isEmpty()) {
-            page = motoRepository.findByPlacaContainingIgnoreCase(placa, pageable);
+        if (modelo != null && !modelo.isEmpty() || (placa != null && !placa.isEmpty())) {
+            modelo = (modelo != null ) ? "modelo" : "";
+            placa  = (placa  != null ) ? "placa " : "";
+            page = motoRepository.findByModeloContainingIgnoreCaseAndPlacaContainingIgnoreCase(modelo, placa, pageable);
         } else {
             page = motoRepository.findAll(pageable);
         }
 
-        return page.map(this::toDTO);
+        return  page.map(this::toDTO);
     }
 
     @GetMapping("/{id}")

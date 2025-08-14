@@ -1,6 +1,8 @@
 package fiap.com.br.future_stack.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,9 +28,10 @@ public class UserController {
     private PasswordEncoder passwordEncoder;
 
     @PostMapping
-    public User create(@RequestBody @Valid User user) {
+    public ResponseEntity<User> create(@RequestBody @Valid User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return repository.save(user);
+        User savedUser = repository.save(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
 
     @PutMapping("/{id}")
