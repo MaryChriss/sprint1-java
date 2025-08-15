@@ -1,7 +1,19 @@
 package fiap.com.br.future_stack.config;
 
-import fiap.com.br.future_stack.model.*;
-import fiap.com.br.future_stack.repository.*;
+import fiap.com.br.future_stack.alpr.EventoAlpr;
+import fiap.com.br.future_stack.alpr.EventoAlprRepository;
+import fiap.com.br.future_stack.gateway.Gateway;
+import fiap.com.br.future_stack.gateway.GatewayRepository;
+import fiap.com.br.future_stack.moto.Moto;
+import fiap.com.br.future_stack.moto.MotoRepository;
+import fiap.com.br.future_stack.moto.StatusMoto;
+import fiap.com.br.future_stack.patio.Patio;
+import fiap.com.br.future_stack.patio.PatioRepository;
+import fiap.com.br.future_stack.wifi.EventoWifi;
+import fiap.com.br.future_stack.wifi.EventoWifiRepository;
+import fiap.com.br.future_stack.zona.TipoZona;
+import fiap.com.br.future_stack.zona.Zona;
+import fiap.com.br.future_stack.zona.ZonaRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
