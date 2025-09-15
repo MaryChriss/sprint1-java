@@ -1,29 +1,17 @@
 package fiap.com.br.future_stack.moto;
 
+import fiap.com.br.future_stack.zona.ZonaRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import fiap.com.br.future_stack.zona.Zona;
-import fiap.com.br.future_stack.zona.ZonaRepository;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/motos")
@@ -38,6 +26,12 @@ public class MotoController {
 
     @Autowired
     private ZonaRepository zonaRepository;
+
+    @GetMapping("/delete/{id}")
+    public String excluirHtml(@PathVariable Long id) {
+        motoRepository.deleteById(id);
+        return "redirect:/motos";
+    }
 
     @GetMapping
     @Cacheable("motos")
@@ -65,12 +59,46 @@ public class MotoController {
         return motoService.toDTO(getMoto(id));
     }
 
-    @PostMapping
+    @PostMapping("/{patioId}")
     @CacheEvict(value = "motos", allEntries = true)
     @ResponseStatus(HttpStatus.CREATED)
-    public MotoDTO criar(@RequestBody @Valid MotoDTO dto) {
+    public MotoDTO criar(@PathVariable Long patioId, @RequestBody @Valid MotoDTO dto) {
         log.info("Criando moto modelo: {}, placa: {}", dto.modelo, dto.placa);
-        return motoService.createMoto(dto);
+        return motoService.createMoto(patioId, dto);
+    }
+
+    @GetMapping("/{id}/localizacao")
+    @Operation(summary = "Obter pátio e zona onde a moto está", tags = "Moto")
+    public MotoLocalizacaoDTO localizacao(@PathVariable Long id) {
+        Moto moto = motoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Moto não encontrada"));
+
+        var zona = moto.getZona();
+        if (zona == null) {
+            // Sem zona associada (se seu domínio permitir isso)
+            return new MotoLocalizacaoDTO(
+                    moto.getId(),
+                    moto.getModelo(),
+                    moto.getPlaca(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+        }
+
+        var patio = zona.getPatio();
+        return new MotoLocalizacaoDTO(
+                moto.getId(),
+                moto.getModelo(),
+                moto.getPlaca(),
+                zona.getId(),
+                zona.getNome(),
+                zona.getTipoZona() != null ? zona.getTipoZona().name() : null,
+                patio != null ? patio.getId() : null,
+                patio != null ? patio.getNome() : null
+        );
     }
 
     @PutMapping("/{id}")

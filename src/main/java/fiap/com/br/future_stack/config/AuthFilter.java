@@ -25,14 +25,12 @@ public class AuthFilter extends OncePerRequestFilter {
 
                 System.out.println("passando pelo filtro");
 
-                //pegar o header
                 var header = request.getHeader("Authorization");
                 if (header == null){
                     filterChain.doFilter(request, response);
                     return;
                 }
 
-                //verificar se é Bearer
                 if(!header.startsWith("Bearer ")){
                     response.setStatus(401);
                     response.getWriter().write("""
@@ -41,12 +39,10 @@ public class AuthFilter extends OncePerRequestFilter {
                     return;
                 }
 
-                //validar JWT
                 var jwt = header.replace("Bearer ", "");
                 var user = tokenService.getUserFromToken(jwt);
                 System.out.println(user);
 
-                //autenticar
                 var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 

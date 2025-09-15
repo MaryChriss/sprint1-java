@@ -1,41 +1,40 @@
 package fiap.com.br.future_stack.patio;
 
+import fiap.com.br.future_stack.moto.MotoDTO;
+import fiap.com.br.future_stack.patio.PatioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/patios")
 @Slf4j
+@RequiredArgsConstructor
 public class PatioController {
 
-    @Autowired
-    private PatioRepository patioRepository;
+    private final PatioService patioService;
 
     @GetMapping
     @Operation(summary = "Listar todos os pátios", tags = "Patio")
     public List<PatioDTO> listar() {
         log.info("Listando todos os pátios");
-        return patioRepository.findAll()
-                .stream()
-                .map(this::toDTO)
-                .collect(Collectors.toList());
+        return patioService.listAllDTO();
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Buscar pátio por id", tags = "Patio")
     public PatioDTO buscar(@PathVariable Long id) {
         log.info("Buscando pátio id {}", id);
-        return getPatio(id).map(this::toDTO)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pátio não encontrado"));
+        return patioService.getById(id);
     }
 
     @PostMapping
@@ -44,27 +43,14 @@ public class PatioController {
     @ApiResponse(responseCode = "400", description = "Dados inválidos")
     public PatioDTO criar(@RequestBody @Valid PatioDTO dto) {
         log.info("Criando pátio {}", dto.nome);
-        Patio patio = new Patio();
-        patio.setNome(dto.nome);
-        patio.setQuantidadeVagas(dto.quantidadeVagas);
-        patio.setMetragemZonaA(dto.metragemZonaA);
-        patio.setMetragemZonaB(dto.metragemZonaB);
-        return toDTO(patioRepository.save(patio));
+        return patioService.createPatio(dto);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualizar pátio", tags = "Patio")
     public PatioDTO atualizar(@PathVariable Long id, @RequestBody @Valid PatioDTO dto) {
         log.info("Atualizando pátio id {}", id);
-        Patio patio = getPatio(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pátio não encontrado"));
-
-        patio.setNome(dto.nome);
-        patio.setQuantidadeVagas(dto.quantidadeVagas);
-        patio.setMetragemZonaA(dto.metragemZonaA);
-        patio.setMetragemZonaB(dto.metragemZonaB);
-
-        return toDTO(patioRepository.save(patio));
+        return patioService.updatePatio(id, dto);
     }
 
     @DeleteMapping("/{id}")
@@ -72,23 +58,21 @@ public class PatioController {
     @Operation(summary = "Excluir pátio", tags = "Patio")
     public void excluir(@PathVariable Long id) {
         log.info("Excluindo pátio id {}", id);
-        Patio patio = getPatio(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pátio não encontrado"));
-        patioRepository.delete(patio);
+        patioService.delete(id);
     }
 
-
-    private java.util.Optional<Patio> getPatio(Long id) {
-        return patioRepository.findById(id);
+    @GetMapping("/{patioId}/motos")
+    @Operation(summary = "Listar motos de um pátio (com filtros)", tags = "Patio")
+    public Page<MotoDTO> listarMotosDoPatio(@PathVariable Long patioId,
+                                            @RequestParam(required = false) String modelo,
+                                            @RequestParam(required = false) String placa,
+                                            Pageable pageable) {
+        return patioService.listarMotosDoPatio(patioId, modelo, placa, pageable);
     }
 
-    private PatioDTO toDTO(Patio patio) {
-        return new PatioDTO(
-                patio.getId(),
-                patio.getNome(),
-                patio.getQuantidadeVagas(),
-                patio.getMetragemZonaA(),
-                patio.getMetragemZonaB()
-        );
+    @GetMapping("/{id}/ocupacao")
+    @Operation(summary = "Obter ocupação do pátio por zona", tags = "Patio")
+    public ResponseEntity<OcupacaoDTO> getOcupacao(@PathVariable Long id) {
+        return ResponseEntity.ok(patioService.getOcupacao(id));
     }
 }

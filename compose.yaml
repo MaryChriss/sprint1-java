@@ -1,0 +1,10 @@
+services:
+  postgres:
+    image: 'postgres:latest'
+    container_name: postgres1
+    environment:
+      - 'POSTGRES_DB=futurestack'
+      - 'POSTGRES_PASSWORD=futurestack'
+      - 'POSTGRES_USER=futurestack'
+    ports:
+      - '5432:5432'
