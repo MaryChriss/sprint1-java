@@ -1,10 +1,19 @@
 services:
   postgres:
-    image: 'postgres:latest'
+    image: postgres:16
     container_name: postgres1
     environment:
-      - 'POSTGRES_DB=futurestack'
-      - 'POSTGRES_PASSWORD=futurestack'
-      - 'POSTGRES_USER=futurestack'
+      POSTGRES_DB: futurestack
+      POSTGRES_USER: futurestack
+      POSTGRES_PASSWORD: futurestack
     ports:
-      - '5432:5432'
+      - "5433:5432"       # <<< muda para 5433 no host
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U futurestack -d futurestack"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata:

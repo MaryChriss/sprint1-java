@@ -2,6 +2,7 @@ package fiap.com.br.future_stack.users;
 
 import java.util.List;
 
+import jakarta.validation.constraints.*;
 import org.springframework.security.core.GrantedAuthority;
 
 import jakarta.persistence.Entity;
@@ -9,9 +10,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -42,6 +40,10 @@ public class User implements UserDetails {
 
     @NotBlank
     private String password;
+
+    @NotBlank
+    @Pattern(regexp = "^\\+?\\d{10,14}$", message = "Telefone deve conter apenas dígitos (com opcional +código do país) e ter 10 a 14 dígitos.")
+    private String phone;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

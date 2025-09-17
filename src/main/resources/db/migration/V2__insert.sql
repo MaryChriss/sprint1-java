@@ -67,10 +67,9 @@ VALUES
 -------------------------
 -- 5) USUARIOS (id_user não é identity no v1; forneça o ID manualmente)
 -------------------------
-INSERT INTO usuario (id_user, nome_user, email, password)
+INSERT INTO usuario (nome_user, email, password, phone)
 VALUES
-    (1, 'ADMIN', 'admin@example.com', 'admin');
-
+    ('ADMIN', 'admin@example.com', 'admin', '119287883');
 -------------------------
 -- 6) EVENTOS WIFI (liga moto + gateway)
 -------------------------
