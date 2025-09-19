@@ -2,8 +2,12 @@ package fiap.com.br.future_stack.moto;
 
 import fiap.com.br.future_stack.patio.Patio;
 import fiap.com.br.future_stack.patio.PatioRepository;
+import fiap.com.br.future_stack.zona.TipoZona;
 import fiap.com.br.future_stack.zona.Zona;
 import fiap.com.br.future_stack.zona.ZonaRepository;
+import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,19 +26,23 @@ public class MotoService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pátio não encontrado"));
 
         Moto moto = new Moto();
-        moto.setModelo(dto.modelo);
-        moto.setPlaca(dto.placa);
-        moto.setStatus(dto.status);
+        moto.setModelo(dto.getModelo());
+        moto.setPlaca(dto.getPlaca() != null ? dto.getPlaca().trim().toUpperCase() : null);
+        moto.setStatus(dto.getStatus());
         moto.setPatio(patio);
 
-        if (dto.zonaId != null) {
-            Zona zona = zonaRepository.findByIdAndPatioId(dto.zonaId, patio.getId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Zona não encontrada neste pátio"));
-            moto.setZona(zona);
+        if (dto.getTipoZona() != null) {
+            Zona z = zonaRepository.findByPatioIdAndTipoZona(patio.getId(), dto.getTipoZona())
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.BAD_REQUEST, "Zona " + dto.getTipoZona() + " não existe neste pátio"));
+            moto.setZona(z);
         } else {
-            moto.setZona(null);
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Informe zonaId ou tipoZona para associar a moto a uma zona existente");
         }
-        return toDTO(motoRepository.save(moto));
+
+        Moto salvo = motoRepository.save(moto);
+        return toDTO(salvo);
     }
 
     public MotoDTO updateMoto(Long id, MotoDTO dto) {
@@ -86,6 +94,7 @@ public class MotoService {
                 moto.getModelo(),
                 moto.getPlaca(),
                 moto.getZona() != null ? moto.getZona().getId() : null,
+                moto.getZona() != null ? moto.getZona().getTipoZona() : null,
                 moto.getStatus(),
                 moto.getPatio() != null ? moto.getPatio().getId() : null
         );

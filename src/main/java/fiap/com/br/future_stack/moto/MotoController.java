@@ -1,5 +1,6 @@
 package fiap.com.br.future_stack.moto;
 
+import fiap.com.br.future_stack.zona.TipoZona;
 import fiap.com.br.future_stack.zona.ZonaRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -75,7 +76,6 @@ public class MotoController {
 
         var zona = moto.getZona();
         if (zona == null) {
-            // Sem zona associada (se seu domínio permitir isso)
             return new MotoLocalizacaoDTO(
                     moto.getId(),
                     moto.getModelo(),
@@ -122,5 +122,48 @@ public class MotoController {
         return motoRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Moto não encontrada"));
     }
+
+    @GetMapping("/search/{patioId}")
+    @Operation(
+            summary = "Buscar motos por placa e/ou zona (A/B) dentro de um pátio",
+            tags = "Moto"
+    )
+    public Page<MotoDTO> searchPorPatio(
+            @PathVariable Long patioId,
+            @RequestParam(required = false) String placa,
+            @RequestParam(required = false) TipoZona tipoZona,
+            Pageable pageable) {
+
+        final String filtroPlaca = placa == null ? "" : placa.trim();
+
+        // 1) placa + tipoZona
+        if (!filtroPlaca.isBlank() && tipoZona != null) {
+            return motoRepository
+                    .findByPlacaContainingIgnoreCaseAndZona_TipoZonaAndZona_Patio_Id(
+                            filtroPlaca, tipoZona, patioId, pageable)
+                    .map(motoService::toDTO);
+        }
+
+        // 2) somente placa (dentro do pátio)
+        if (!filtroPlaca.isBlank()) {
+            return motoRepository
+                    .findByPlacaContainingIgnoreCaseAndPatio_Id(
+                            filtroPlaca, patioId, pageable)
+                    .map(motoService::toDTO);
+        }
+
+        // 3) somente tipoZona (dentro do pátio)
+        if (tipoZona != null) {
+            return motoRepository
+                    .findByZona_TipoZonaAndZona_Patio_Id(
+                            tipoZona, patioId, pageable)
+                    .map(motoService::toDTO);
+        }
+
+        // 4) sem filtros -> retorna tudo do pátio (ou Page.empty se preferir)
+        return motoRepository.findByPatio_Id(patioId, pageable)
+                .map(motoService::toDTO);
+    }
+
 
 }

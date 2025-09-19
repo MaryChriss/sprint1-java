@@ -11,5 +11,7 @@ public interface ZonaRepository extends JpaRepository<Zona, Long> {
     Optional<Zona> findByIdAndPatioId(Long zonaId, Long patioId);
     boolean existsByIdAndPatioId(Long zonaId, Long patioId);
     List<Zona> findByPatioId(Long patioId);
+    Optional<Zona> findByPatioIdAndTipoZona(Long patioId, TipoZona tipoZona);
     boolean existsByPatioIdAndTipoZona(Long patioId, TipoZona tipoZona);
+    void deleteByPatio_Id(Long patioId);
 }

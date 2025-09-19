@@ -1,0 +1,28 @@
+ALTER TABLE usuario
+    ADD CONSTRAINT pk_usuario PRIMARY KEY (id_user);
+
+ALTER TABLE usuario
+    ALTER COLUMN email DROP NOT NULL;
+
+ALTER TABLE patio
+    ALTER COLUMN metragem_zonaa SET NOT NULL;
+
+ALTER TABLE patio
+    ALTER COLUMN metragem_zonab SET NOT NULL;
+
+ALTER TABLE usuario
+    ALTER COLUMN nome_user DROP NOT NULL;
+
+ALTER TABLE usuario
+    ALTER COLUMN password DROP NOT NULL;
+
+ALTER TABLE usuario
+ALTER
+COLUMN phone TYPE VARCHAR(255) USING (phone::VARCHAR(255));
+
+ALTER TABLE usuario
+    ALTER COLUMN phone DROP NOT NULL;
+
+ALTER TABLE patio
+    ALTER COLUMN quantidade_vagas SET NOT NULL;
+

@@ -1,9 +1,7 @@
 package fiap.com.br.future_stack.patio;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,17 +18,22 @@ public class Patio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank()
     @Column(unique = true)
     private String nome;
 
-    @Size(min = 60, max = 255, message = "{patio.qntvagas.size}")
+    @NotNull
+    @Min(value = 60)
+    @Max(value = 255)
     private Integer quantidadeVagas;
 
-    @Size(min =350, max =1400 , message = "{patio.qntvagasA.size}")
+    @NotNull
+    @DecimalMin(value = "350", inclusive = true)   // era @Size
+    @DecimalMax(value = "1400", inclusive = true)  // era @Size
     private Double metragemZonaA;
 
-    @Size(min =350, max =1400 , message = "{patio.qntvagasB.size}")
+    @NotNull
+    @DecimalMin(value = "350", inclusive = true)   // era @Size
+    @DecimalMax(value = "1400", inclusive = true)  // era @Size
     private Double metragemZonaB;
-
 }
