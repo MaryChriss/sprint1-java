@@ -23,11 +23,7 @@ public interface MotoRepository extends JpaRepository<Moto, Long> {
     Page<Moto> findByZona_TipoZonaAndZona_Patio_Id(TipoZona tipoZona, Long patioId, Pageable pageable);
     Page<Moto> findByPlacaContainingIgnoreCaseAndZona_TipoZonaAndZona_Patio_Id(
             String placa, TipoZona tipoZona, Long patioId, Pageable pageable);
-
-    // placa + pátio
     Page<Moto> findByPlacaContainingIgnoreCaseAndPatio_Id(
             String placa, Long patioId, Pageable pageable);
-
-    // tudo do pátio (fallback)
     Page<Moto> findByPatio_Id(Long patioId, Pageable pageable);
 }

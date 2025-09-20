@@ -48,8 +48,12 @@ public class UserController {
         user.setEmail(dto.getEmail());
     }
 
-    if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+    if (dto.getNomeUser() != null && !dto.getNomeUser().isBlank()) {
+         user.setNomeUser(dto.getNomeUser());
+    }
+
+    if (dto.getPhone() != null && !dto.getPhone().isBlank()) {
+        user.setPhone(dto.getPhone());
     }
 
     return repository.save(user);
