@@ -1,230 +1,57 @@
-# **FutureStack – Health Score API**
+# futureStack 
 
-O FutureStack – Health Score é uma plataforma que calcula um índice de bem-estar profissional (0 a 1000) baseado em check-ins diários do usuário sobre humor, energia, sono, foco e carga de trabalho. Esse score mostra o nível de equilíbrio do profissional e o risco de burnout, combinando IA Generativa com Spring AI para oferecer recomendações personalizadas. A solução integra mensageria assíncrona, caching, internacionalização e segurança completa com JWT.
+Sistema inteligente de rastreamento de motos via Wi-Fi, com mapeamento digital em tempo real e adaptável a diferentes filiais.
 
----
+## 📋 Descrição da Solução
 
-## 📌 **Tecnologias Utilizadas**
+O **futureStack** é uma solução de monitoramento de motos que utiliza gateways Wi-Fi posicionados estrategicamente para detectar automaticamente a presença de veículos em duas zonas principais: **Zona A (Pátio)** e **Zona B (Manutenção)**.
 
-- **Java 21**
-- **Spring Boot**
-- **Spring Security**
-- **Spring Data JPA**
-- **Bean Validation**
-- **Spring Cache**
-- **Internacionalização** (pt-BR e en-US)
-- **RabbitMQ** (Mensageria)
-- **Spring AI** (Groq)
-- **Maven**
+Cada moto emite sinal que é captado pelo **gateway instalado em cada zona**. Com base na intensidade do sinal (`RSSI`), o sistema identifica a localização aproximada da moto e atualiza sua posição em um **mapa digital interativo**. Além disso, são apresentados dados como **metragem total de cada zona**, **ocupação atual** e uma **visualização detalhada em tempo real**.
 
----
+O sistema também permite **buscas por placa ou modelo**, e é totalmente **adaptável a diferentes filiais**, com cadastro personalizado da metragem de pátio e manutenção, além de gateways exclusivos por local.
 
-## 🧠 **Funcionalidades Principais**
+## Essa API permite:
 
-- 🔐 **Autenticação & Autorização** com JWT
-- 📊 **Check-ins Diários** para monitoramento do bem-estar
-- 🎯 **Cálculo Automático de Score** (0-1000 pontos)
-- 🤖 **Recomendações Personalizadas** via IA Generativa
-- 💬 **Chat de Suporte Emocional** com IA
-- ⚡ **Processamento Assíncrono** com RabbitMQ
-- 🚀 **Cache** para otimização de performance
-- 🌍 **Internacionalização** (pt-BR e en-US)
-- 📈 **Relatórios e Métricas** (média mensal, resumos)
+- Cadastro de zonas com metragem por filial
+- Busca por **placa** ou **zona**
+- Paginação, ordenação e filtros
+- Tratamento global de erros
+- Validação de campos com Bean Validation
 
----
+## 🚀 Tecnologias Utilizadas
 
-## 📚 **Documentação**
+- Java 17
+- Spring Boot 
+- Spring Web
+- Spring Data JPA
+- Spring Cache (com Caffeine)
+- Spring Validation (Jakarta Bean Validation)
+- Banco H2 (ou Oracle)
+- Lombok
+- MapStruct (ou ModelMapper)
+- Swagger / OpenAPI (Springdoc)
 
-### 🔐 **Autenticação**
+## 🛠️ Como Rodar o Projeto Localmente
 
-#### **Cadastrar Usuário**
-**POST** `/api/users`
+1. **Clone o repositório:**
 
-**Request:**
-```json
-{
-  "nome": "Amanda Nunes",
-  "email": "amanda@example.com",
-  "password": "123456"
-}
-```
-
-#### **Login**
-**POST** `/api/auth/login`
-
-**Request:**
-```json
-{
-  "email": "amanda@example.com",
-  "password": "123456"
-}
-```
-
-**Response:**
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6...",
-  "type": "Bearer"
-}
-```
-
-**Use o token em todas as requisições:**
-```
-Authorization: Bearer SEU_TOKEN_JWT
-```
-
----
-
-### 👤 **Gerenciamento de Usuário**
-
-#### **Atualizar Usuário**
-**PUT** `/api/users`
-
-**Request:**
-```json
-{
-  "nome": "Amanda Nunes",
-  "email": "amanda.nova@example.com"
-}
-```
-
-#### **Obter Meus Dados**
-**GET** `/api/users/me`
-
----
-
-### 📊 **Check-ins e Monitoramento**
-
-#### **Criar Check-in**
-**POST** `/api/checkins`
-
-**Request:**
-```json
-{
-  "mood": 6,
-  "energy": 7,
-  "sleep": 6,
-  "focus": 8,
-  "hoursWorked": 5
-}
-```
-
-**Response:**
-```json
-{
-  "id": 42,
-  "date": "2025-11-16T19:22:10.402",
-  "score": 720,
-  "mood": 6,
-  "energy": 7,
-  "sleep": 6,
-  "focus": 8,
-  "hoursWorked": 5
-}
-```
-
-#### **Último Check-in**
-**GET** `/api/checkins/last`
-
-#### **Média Mensal**
-**GET** `/api/checkins/monthly-avg`
-
----
-
-### 🤖 **IA Generativa & Recomendações**
-
-#### **Recomendação Diária**
-**GET** `/api/ai/daily`
-
-**Response:**
-```json
-{
-  "recommendation": "Hoje seu nível de sono está abaixo da média. Priorize um descanso mais profundo esta noite..."
-}
-```
-
-#### **Resumo Semanal/Mensal**
-**GET** `/api/ai/monthly-summary`
-
-#### **Chat com IA**
-**POST** `/api/ai/chat`
-
-**Request:**
-```json
-{
-  "message": "Estou muito cansada hoje, como posso equilibrar minha energia?"
-}
-```
-
-**Response:**
-```json
-{
-  "response": "Percebo que seus níveis recentes de energia estão baixos. Tente programar pequenas pausas ao longo do dia..."
-}
-```
-
----
-
-## 🌍 **Internacionalização (i18n)**
-
-A API suporta **português (pt-BR)** e **inglês (en-US)**.
-
-**Exemplo de uso:**
 ```bash
-# Português (padrão)
-GET /api/checkins/last
-
-# Inglês
-GET /api/checkins/last?lang=en_US
+git clone https://github.com/seu-usuario/sprint1-java.git
+cd sprint1-java
 ```
 
----
+2. **Configure o banco H2**
 
-## ⚡ **Arquitetura & Mensageria**
+3. **rode a aplicação**
 
-### **Fluxo de Check-in com RabbitMQ**
-1. ✅ Usuário envia check-in
-2. 📨 Evento é publicado na fila `CHECKIN_QUEUE`
-3. 🤖 Consumer processa e gera recomendação via IA
-4. 💾 Recomendação é salva no banco
-5. 🔔 Usuário recebe recomendação personalizada
+## 🧠 Funcionalidades Futuras
 
-**Estrutura do Evento:**
-```json
-{
-  "userId": 1,
-  "checkInId": 42,
-  "score": 720,
-  "timestamp": "2025-11-16T19:22:10.402"
-}
-```
+- Integração com API dos gateways IoT
+- Integração com o front-end
+- 
+Autenticação e controle de acesso por filial
+## 👥 Integrantes
 
----
-
-## 🐳 **Deploy:**
-- **Link para acesso:**: [Download Link](#)
----
-
-## 📱 **Integração Mobile**
-
-Este backend é consumido pelo aplicativo mobile em React Native:
-
-- **Repositório Frontend**: [github.com/seu-usuario/futurestack-mobile](https://github.com/seu-usuario/futurestack-mobile)
-- **APK**: [Download Link](#)
-
----
-
-## 🎬 **Vídeos e Demonstrações**
-
-🎯 **Vídeo Pitch**: [Link para o vídeo pitch](#)  
-📱 **Vídeo Demonstração**: [Link para demonstração](#)  
-
----
-
-## 👥 **Equipe de Desenvolvimento**
-
-| Integrante | RM |
-|------------|-----|
-| **Mariana Christina** | RM554773 |
-| **Gabriela Moguinho** |RM556143 |
-| **Henrique Maciel** | RM556480 |
+- Mariana Christina RM: 554773
+- Gabriela Moguinho RM: 556143
+- Henrique Maciel RM: 556480
