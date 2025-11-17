@@ -1,147 +1,230 @@
-# futureStack 
+# **FutureStack – Health Score API**
 
-Sistema inteligente de rastreamento de motos via Wi-Fi, com mapeamento digital em tempo real e adaptável a diferentes filiais.
+O **FutureStack – Health Score API** é uma plataforma desenvolvida para monitorar o bem-estar profissional dos usuários através de check-ins diários, cálculo de score (0–1000) e geração de recomendações com **IA Generativa usando Spring AI**. A solução combina mensageria assíncrona, caching, internacionalização e segurança completa com JWT.
 
-## 📋 Descrição da Solução
+---
 
-O **futureStack** é uma solução de monitoramento de motos que utiliza gateways Wi-Fi posicionados estrategicamente para detectar automaticamente a presença de veículos em duas zonas principais: **Zona A (Pátio)** e **Zona B (Manutenção)**.
+## 📌 **Tecnologias Utilizadas**
 
-Cada moto emite sinal que é captado pelo **gateway instalado em cada zona**. Com base na intensidade do sinal (`RSSI`), o sistema identifica a localização aproximada da moto e atualiza sua posição em um **mapa digital**. Além disso, são apresentados dados como **metragem total de cada zona**, **ocupação atual** e uma **visualização detalhada em tempo real**.
+- **Java 21**
+- **Spring Boot**
+- **Spring Security**
+- **Spring Data JPA**
+- **Bean Validation**
+- **Spring Cache**
+- **Internacionalização** (pt-BR e en-US)
+- **RabbitMQ** (Mensageria)
+- **Spring AI** (Groq)
+- **Maven**
 
-O sistema também permite **buscas por placa ou modelo**, e é totalmente **adaptável a diferentes filiais**, com cadastro personalizado da metragem de pátio e manutenção, além de gateways exclusivos por local.
+---
 
-## Essa API permite:
+## 🧠 **Funcionalidades Principais**
 
-- Cadastro de patios com metragem
-- Busca por **placa** ou **modelo**
-- Paginação, ordenação e filtros
-- Validação de campos com Bean Validation
+- 🔐 **Autenticação & Autorização** com JWT
+- 📊 **Check-ins Diários** para monitoramento do bem-estar
+- 🎯 **Cálculo Automático de Score** (0-1000 pontos)
+- 🤖 **Recomendações Personalizadas** via IA Generativa
+- 💬 **Chat de Suporte Emocional** com IA
+- ⚡ **Processamento Assíncrono** com RabbitMQ
+- 🚀 **Cache** para otimização de performance
+- 🌍 **Internacionalização** (pt-BR e en-US)
+- 📈 **Relatórios e Métricas** (média mensal, resumos)
 
-## Principais Endpoints (CRUD):
+---
 
-- 🏍️ Motos
+## 📚 **Documentação**
 
-Listar todas as motos
-GET /motos
+### 🔐 **Autenticação**
 
-```
-GET http://localhost:8080/motos
-```
+#### **Cadastrar Usuário**
+**POST** `/api/users`
 
-Listar motos com filtro por modelo
-GET /motos?modelo={modelo}&page={n}&size={n}&sort={campo}
-
-```
-GET http://localhost:8080/motos?modelo=honda&page=0&size=10&sort=modelo
-```
-Listar motos com filtro por placa
-GET /motos?placa={placa}&page={n}&size={n}
-
-```
-GET http://localhost:8080/motos?placa=ABC&page=0&size=10
-```
-
-Criar nova moto
-POST /motos
-
-Body (JSON):
-```
+**Request:**
+```json
 {
-    "modelo": "Honda 160",
-    "placa": "AADR34",
-    "zonaId": 1,
-    "status": "DISPONIVEL"
+  "nome": "Amanda Nunes",
+  "email": "amanda@example.com",
+  "password": "123456"
 }
 ```
 
-Atualizar moto
-PUT /motos/{id}
+#### **Login**
+**POST** `/api/auth/login`
 
-Body (JSON):
-```
+**Request:**
+```json
 {
-    "modelo": "Honda 169",
-    "placa": "AADR74",
-    "zonaId": 2,
-    "status": "DISPONIVEL"
-}
-```
-Excluir moto
-DELETE /motos/{id}
-
-- 🅿️Patio
-```
-```
-Listar todos os pátios
-GET /patios
-
-```
-GET http://localhost:8080/patios
-```
-
-Buscar pátio por ID
-GET /patios/{id}
-
-Criar novo pátio
-POST /patios
-
-Body (JSON):
-```
-{
-  "nome": "Pátio Central",
-  "quantidadeVagas": 50,
-  "metragemZonaA": 100.5,
-  "metragemZonaB": 80.0
+  "email": "amanda@example.com",
+  "password": "123456"
 }
 ```
 
-Atualizar pátio
-PUT /patios/{id}
-
-Body (JSON):
-
-```
+**Response:**
+```json
 {
-  "nome": "Pátio Central Atualizado",
-  "quantidadeVagas": 60,
-  "metragemZonaA": 120.0,
-  "metragemZonaB": 90.0
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6...",
+  "type": "Bearer"
 }
 ```
 
-Excluir pátio
-DELETE /patios/{id}
+**Use o token em todas as requisições:**
+```
+Authorization: Bearer SEU_TOKEN_JWT
+```
 
-## 🚀 Tecnologias Utilizadas
+---
 
-- Java 17
-- Spring Boot 
-- Spring Web
-- Spring Data JPA
-- Spring Cache
-- Spring Validation (Bean Validation)
-- Banco H2
-- Lombok
-- Swagger
+### 👤 **Gerenciamento de Usuário**
 
-## 🛠️ Como Rodar o Projeto Localmente
+#### **Atualizar Usuário**
+**PUT** `/api/users`
 
-1. **Clone o repositório:**
+**Request:**
+```json
+{
+  "nome": "Amanda Nunes",
+  "email": "amanda.nova@example.com"
+}
+```
 
+#### **Obter Meus Dados**
+**GET** `/api/users/me`
+
+---
+
+### 📊 **Check-ins e Monitoramento**
+
+#### **Criar Check-in**
+**POST** `/api/checkins`
+
+**Request:**
+```json
+{
+  "mood": 6,
+  "energy": 7,
+  "sleep": 6,
+  "focus": 8,
+  "hoursWorked": 5
+}
+```
+
+**Response:**
+```json
+{
+  "id": 42,
+  "date": "2025-11-16T19:22:10.402",
+  "score": 720,
+  "mood": 6,
+  "energy": 7,
+  "sleep": 6,
+  "focus": 8,
+  "hoursWorked": 5
+}
+```
+
+#### **Último Check-in**
+**GET** `/api/checkins/last`
+
+#### **Média Mensal**
+**GET** `/api/checkins/monthly-avg`
+
+---
+
+### 🤖 **IA Generativa & Recomendações**
+
+#### **Recomendação Diária**
+**GET** `/api/ai/daily`
+
+**Response:**
+```json
+{
+  "recommendation": "Hoje seu nível de sono está abaixo da média. Priorize um descanso mais profundo esta noite..."
+}
+```
+
+#### **Resumo Semanal/Mensal**
+**GET** `/api/ai/monthly-summary`
+
+#### **Chat com IA**
+**POST** `/api/ai/chat`
+
+**Request:**
+```json
+{
+  "message": "Estou muito cansada hoje, como posso equilibrar minha energia?"
+}
+```
+
+**Response:**
+```json
+{
+  "response": "Percebo que seus níveis recentes de energia estão baixos. Tente programar pequenas pausas ao longo do dia..."
+}
+```
+
+---
+
+## 🌍 **Internacionalização (i18n)**
+
+A API suporta **português (pt-BR)** e **inglês (en-US)**.
+
+**Exemplo de uso:**
 ```bash
-git clone https://github.com/seu-usuario/sprint1-java.git
-cd sprint1-java
+# Português (padrão)
+GET /api/checkins/last
+
+# Inglês
+GET /api/checkins/last?lang=en_US
 ```
 
-3. **rode a aplicação**
+---
 
-## 🧠 Funcionalidades Futuras
+## ⚡ **Arquitetura & Mensageria**
 
-- Integração com API dos gateways IoT
-- Integração com o front-end
-  
-## 👥 Integrantes
+### **Fluxo de Check-in com RabbitMQ**
+1. ✅ Usuário envia check-in
+2. 📨 Evento é publicado na fila `CHECKIN_QUEUE`
+3. 🤖 Consumer processa e gera recomendação via IA
+4. 💾 Recomendação é salva no banco
+5. 🔔 Usuário recebe recomendação personalizada
 
-- Mariana Christina RM: 554773
-- Gabriela Moguinho RM: 556143
-- Henrique Maciel RM: 556480
+**Estrutura do Evento:**
+```json
+{
+  "userId": 1,
+  "checkInId": 42,
+  "score": 720,
+  "timestamp": "2025-11-16T19:22:10.402"
+}
+```
+
+---
+
+## 🐳 **Deploy:**
+- **Link para acesso:**: [Download Link](#)
+---
+
+## 📱 **Integração Mobile**
+
+Este backend é consumido pelo aplicativo mobile em React Native:
+
+- **Repositório Frontend**: [github.com/seu-usuario/futurestack-mobile](https://github.com/seu-usuario/futurestack-mobile)
+- **APK**: [Download Link](#)
+
+---
+
+## 🎬 **Vídeos e Demonstrações**
+
+🎯 **Vídeo Pitch**: [Link para o vídeo pitch](#)  
+📱 **Vídeo Demonstração**: [Link para demonstração](#)  
+
+---
+
+## 👥 **Equipe de Desenvolvimento**
+
+| Integrante | RM |
+|------------|-----|
+| **Mariana Christina** | RM554773 |
+| **Gabriela Moguinho** |RM556143 |
+| **Henrique Maciel** | RM556480 |
