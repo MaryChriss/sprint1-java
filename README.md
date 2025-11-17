@@ -1,6 +1,6 @@
 # **FutureStack – Health Score API**
 
-O **FutureStack – Health Score API** é uma plataforma desenvolvida para monitorar o bem-estar profissional dos usuários através de check-ins diários, cálculo de score (0–1000) e geração de recomendações com **IA Generativa usando Spring AI**. A solução combina mensageria assíncrona, caching, internacionalização e segurança completa com JWT.
+O FutureStack – Health Score é uma plataforma que calcula um índice de bem-estar profissional (0 a 1000) baseado em check-ins diários do usuário sobre humor, energia, sono, foco e carga de trabalho. Esse score mostra o nível de equilíbrio do profissional e o risco de burnout, combinando IA Generativa com Spring AI para oferecer recomendações personalizadas. A solução integra mensageria assíncrona, caching, internacionalização e segurança completa com JWT.
 
 ---
 
